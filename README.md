@@ -1,10 +1,14 @@
-# food-finder-review
+# food-reviewer
 
 ## Project setup
 ```
 npm install
 ```
-
+### Add API Key
+```
+Inside .env add:
+VUE_APP_API_KEY="Your Zomato API Ley"
+```
 ### Compiles and hot-reloads for development
 ```
 npm run serve
