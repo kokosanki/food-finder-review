@@ -29,6 +29,7 @@ export default {
           this.restaurants = response.data.restaurants
           this.loading = false
           store.restaurants = this.restaurants
+          store.loading = this.loading
         })
         .catch((error) => {
           console.log(error)

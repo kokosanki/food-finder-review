@@ -2,12 +2,16 @@
   <div class="restaurants">
     <div class="restaurants__img"></div>
     <h1 class="restaurants__header">Najlepsze restauracje w Poznaniu</h1>
-    <ul class="restaurants__list">
+    <div class="loader" v-if="loading">
+      <div class="loader__item loader__item-1"></div>
+      <div class="loader__item loader__item-2"></div>
+      <div class="loader__item loader__item-3"></div>
+    </div>
+    <ul v-else class="restaurants__list">
       <li
         class="restaurants__item"
         v-for="restaurant in restaurants"
-        :key="
-     restaurant.restaurant.id"
+        :key="restaurant.restaurant.id"
       >
         <a :href="restaurant.restaurant.events_url">{{restaurant.restaurant.name}}</a>
         Ocena: {{restaurant.restaurant.user_rating.aggregate_rating}}
@@ -35,6 +39,9 @@ export default {
       } else {
         return []
       }
+    },
+    loading () {
+      return store.loading
     }
   }
 }
@@ -49,6 +56,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position-y: center;
+    box-sizing: border-box;
   }
   &__header {
     font-weight: normal;
@@ -64,6 +72,37 @@ export default {
       a {
         color: #42b983;
       }
+    }
+  }
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  &__item {
+    background-color: #42b983;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+  }
+  &__item-1 {
+    animation: opacity 1.1s ease-in-out alternate infinite;
+  }
+  &__item-2 {
+    margin: 0 25px;
+    animation: opacity 1.1s ease-in-out 0.5s alternate infinite;
+  }
+  &__item-3 {
+    animation: opacity 1.1s ease-in-out 1s alternate infinite;
+  }
+  @keyframes opacity {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.1;
     }
   }
 }
