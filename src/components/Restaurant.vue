@@ -1,54 +1,54 @@
 <template>
   <div>
     <div class="restaurant" v-if="restaurants.length > 0">
-      <div
+       <div
         class="restaurant__img"
-        v-if="restaurant.restaurant.featured_image.length > 0"
-        :style="{'background-image': 'url(' + restaurant.restaurant.featured_image + ')' }"
+        v-if="restaurant.featured_image"
+        :style="{'background-image': 'url(' + restaurant.featured_image + ')' }"
         alt="restaurant"
       ></div>
-      <div class="restaurant__img" v-else alt></div>
+    <div class="restaurant__img" v-else alt></div>
       <div class="restaurant__header">
         <h1>
-          <a :href="restaurant.restaurant.events_url">{{restaurant.restaurant.name}}</a>
+          <a :href="restaurant.events_url">{{restaurant.name}}</a>
         </h1>
-        <h4>{{restaurant.restaurant.location.locality}}, {{restaurant.restaurant.location.city}}</h4>
+        <h4>{{restaurant.location.locality}}, {{restaurant.location.city}}</h4>
       </div>
       <div class="restaurant__description">
         <div class="restaurant__links">
-          <h3>Linki</h3>
-          <a :href="restaurant.restaurant.photos_url">Zdjęcia</a>
+          <h3>Links</h3>
+          <a :href="restaurant.photos_url">Photos</a>
           <br />
-          <a :href="restaurant.restaurant.menu_url">Menu</a>
+          <a :href="restaurant.menu_url">Menu</a>
           <br />
-          <a :href="restaurant.restaurant.events_url">Wydarzenia</a>
+          <a :href="restaurant.events_url">Events</a>
         </div>
         <div class="restaurant__info">
-          <strong>Adres:</strong>
-          {{restaurant.restaurant.location.address}}
+          <strong>Address:</strong>
+          {{restaurant.location.address}}
           <br />
-          <strong>Kuchnia:</strong>
-          {{restaurant.restaurant.cuisines}}
+          <strong>Cuisine:</strong>
+          {{restaurant.cuisines}}
           <br />
-          <strong>Średni koszt obiadu dla 2 osób:</strong>
-          {{restaurant.restaurant.average_cost_for_two}}zł
+          <strong>Average cost for two:</strong>
+          {{restaurant.average_cost_for_two}}zł
           <br />
-          <strong>Ocena:</strong>
-          {{restaurant.restaurant.user_rating.aggregate_rating}}
+          <strong>Rating:</strong>
+          {{restaurant.user_rating.aggregate_rating}}
           <span
             style="color: rgb(63, 126, 0);"
-          >({{restaurant.restaurant.user_rating.rating_text}})</span>
+          >({{restaurant.user_rating.rating_text}})</span>
           <br />
           <p
             class="success"
-            v-if="restaurant.restaurant.has_online_delivery"
-          >Obsługuje przez internet</p>
-          <p class="fail" v-else>Nie obsługuje zamówień przez Internet</p>
+            v-if="restaurant.has_online_delivery"
+          >Has online delivery</p>
+          <p class="fail" v-else>Doesn't have online delivery</p>
           <p
             class="success"
-            v-if="restaurant.restaurant.is_table_reservation_supported"
-          >Możliwość rezerwacji miejsc</p>
-          <p v-else class="fail">Brak rezerwacji miejsc</p>
+            v-if="restaurant.is_table_reservation_supported"
+          >Table reservation is supported</p>
+          <p v-else class="fail">Table reservation is not supported</p>
         </div>
       </div>
       <router-link class="restaurant__back" to="/">Back</router-link>
@@ -65,11 +65,15 @@ export default {
     restaurants () {
       return store.restaurants
     },
+    restaurantId () {
+      return parseInt(this.$route.params.id)
+    },
     restaurant () {
       if (this.restaurants.length > 0) {
-        return this.restaurants.find(
-          (item) => item.restaurant.id === parseInt(this.$route.params.id)
+        const restaurant = this.restaurants.find(
+          (item) => item.restaurant.id === this.restaurantId
         )
+        return restaurant.restaurant
       } else {
         return {}
       }

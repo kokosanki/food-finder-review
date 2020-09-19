@@ -2,7 +2,8 @@ import Vue from 'vue'
 
 const state = Vue.observable({
   restaurants: {},
-  loading: []
+  loading: false,
+  error: false
 })
 
 export default state

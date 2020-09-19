@@ -1,6 +1,6 @@
 <template>
   <div>
-      <router-view />
+    <router-view />
   </div>
 </template>
 
@@ -10,30 +10,40 @@ import store from './store'
 
 export default {
   name: 'App',
-  data () {
-    return {
-      restaurants: [],
-      loading: false
-    }
-  },
   methods: {
-    // eslint-disable-next-line
-    fetchRestaurants: function() {
+    fetchAllRestaurants: function () {
       this.loading = true
-      const config = {
-        'user-key': process.env.VUE_APP_API_KEY,
-        Accept: 'application/json'
+      const instance = axios.create({
+        baseURL:
+          'https://developers.zomato.com/api/v2.1/search?entity_id=262&entity_type=city&count=20&collection_id=1&sort=rating&order=desc',
+        headers: {
+          'user-key': process.env.VUE_APP_API_KEY,
+          Accept: 'application/json'
+        },
+        params: {
+          entity_id: '262',
+          entity_type: 'city',
+          count: '20',
+          collection_id: '1',
+          sort: 'rating',
+          order: 'desc'
+        }
+      })
+      return instance.get(this.baseURL, {
+        headers: this.headers,
+        params: this.params
+      })
+    },
+    async fetchRestaurants () {
+      store.loading = true
+      try {
+        const response = await this.fetchAllRestaurants()
+        store.restaurants = response.data.restaurants
+        store.loading = false
+      } catch (ex) {
+        store.error = true
+        console.log(ex)
       }
-      axios.get('https://developers.zomato.com/api/v2.1/search?entity_id=262&entity_type=city&count=20&collection_id=1&sort=rating&order=desc', { headers: config })
-        .then((response) => {
-          this.restaurants = response.data.restaurants
-          this.loading = false
-          store.restaurants = this.restaurants
-          store.loading = this.loading
-        })
-        .catch((error) => {
-          console.log(error)
-        })
     }
   },
   created () {
@@ -49,6 +59,6 @@ body {
 }
 * {
   color: #2c3e50;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 </style>
